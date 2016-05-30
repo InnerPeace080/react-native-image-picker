@@ -1,21 +1,23 @@
 package com.imagepicker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.database.Cursor;
+import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
-import android.app.AlertDialog;
 import android.widget.ArrayAdapter;
-import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
-import android.graphics.Bitmap;
-import android.media.ExifInterface;
-import android.content.ComponentName;
-import android.graphics.Matrix;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
@@ -25,19 +27,19 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.OutputStream;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.FileOutputStream;
-import java.util.UUID;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class ImagePickerModule extends ReactContextBaseJavaModule {
   static final int REQUEST_LAUNCH_CAMERA = 1;
@@ -78,6 +80,21 @@ public class ImagePickerModule extends ReactContextBaseJavaModule {
   public void showImagePicker(final ReadableMap options, final Callback callback) {
       response = Arguments.createMap();
 
+
+      // permission
+      if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+          if (!(mReactContext.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                  == PackageManager.PERMISSION_GRANTED)) {
+              ActivityCompat.requestPermissions(mMainActivity, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+              response.putBoolean("didCancel", true);
+              callback.invoke(response);
+              return;
+          }
+      }
+
+
+
+      //
       List<String> mTitles = new ArrayList<String>();
       List<String> mActions = new ArrayList<String>();
 

@@ -5,11 +5,5 @@
     // min sdk version not sure if it's actually useful
     <uses-sdk 
         android:minSdkVersion="11"/>
-    // required permission not sure if it's actually useful
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-feature android:name="android.hardware.camera"
-                  android:required="true"/>
-    <uses-feature android:name="android.hardware.camera.autofocus" />
 
 </manifest>
