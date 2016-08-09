@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,9 +18,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
-import android.widget.ArrayAdapter;
 import android.webkit.MimeTypeMap;
-import android.content.pm.PackageManager;
+import android.widget.ArrayAdapter;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
@@ -42,7 +42,6 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -479,11 +478,11 @@ public class ImagePickerModule extends ReactContextBaseJavaModule implements Act
 
   private boolean permissionsCheck(Activity activity) {
     int writePermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    int cameraPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
-    if (writePermission != PackageManager.PERMISSION_GRANTED || cameraPermission != PackageManager.PERMISSION_GRANTED) {
+//    int cameraPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
+//    if (writePermission != PackageManager.PERMISSION_GRANTED || cameraPermission != PackageManager.PERMISSION_GRANTED) {
+    if (writePermission != PackageManager.PERMISSION_GRANTED) {
       String[] PERMISSIONS = {
               Manifest.permission.WRITE_EXTERNAL_STORAGE,
-              Manifest.permission.CAMERA
       };
       ActivityCompat.requestPermissions(activity, PERMISSIONS, 1);
       return false;
